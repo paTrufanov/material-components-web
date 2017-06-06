@@ -172,24 +172,22 @@ test('adapter#deregisterInteractionHandler proxies to removeEventListener', () =
 });
 
 test('adapter#registerDocumentClickHandler proxies to addEventListener', () => {
-  const {root, component} = setupTest();
+  const {component} = setupTest();
   const handler = td.func('interactionHandler');
-  document.body.appendChild(root);
+
   component.getDefaultFoundation().adapter_.registerDocumentClickHandler(handler);
   domEvents.emit(document, 'click');
   td.verify(handler(td.matchers.anything()));
-  document.body.removeChild(root);
 });
 
 test('adapter#deregisterDocumentClickHandler proxies to removeEventListener', () => {
-  const {root, component} = setupTest();
+  const {component} = setupTest();
   const handler = td.func('interactionHandler');
-  document.body.appendChild(root);
-  root.addEventListener('click', handler);
-  component.getDefaultFoundation().adapter_.deregisterInteractionHandler(handler);
+
+  document.addEventListener('click', handler);
+  component.getDefaultFoundation().adapter_.deregisterDocumentClickHandler(handler);
   domEvents.emit(document, 'click');
   td.verify(handler(td.matchers.anything()), {times: 0});
-  document.body.removeChild(root);
 });
 
 test('adapter#getYParamsForItemAtIndex returns the height and top of the item at the provided index', () => {
